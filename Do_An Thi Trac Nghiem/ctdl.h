@@ -15,7 +15,7 @@ struct sinh_vien // ds lien ket don
 	char ho[21];
 	char ten[11];
 	char phai[5];
-	string password[17];
+	char password[17];
 	sinh_vien *pnext;	
 };
 typedef struct sinh_vien SINH_VIEN;
