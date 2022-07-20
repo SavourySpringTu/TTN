@@ -1,14 +1,28 @@
-// lop
+// ================= XU LY LOP =====================
+
 int kttrungLop(DS_LOP ds_lop,char m_lop[]);
 void themLop(DS_LOP &ds_lop,LOP lop);
 void xoaLop(DS_LOP &ds_lop,LOP lop);
+void xuaLop(DS_LOP &ds_lop,char temp1[],char m_lopxua[],char t_lopxua[]);
 
-// doc ghi tao file
+// ================== XU LY SINH VIEN =============
+
+SINH_VIEN *khoitao(char m_sv[16],char h_sv[21],char t_sv[11],char p_sv[5],char ps[17]);
+int kttrungSV(DS_SINH_VIEN ds_sv,char m_sv[16]);
+void themSV(DS_SINH_VIEN &ds_sv,char m_sv[16],char h_sv[21],char t_sv[11],char p_sv[5],char ps[17],char m_lop[16]);
+void giaophongSV(DS_SINH_VIEN &ds_sv);
+
+// ================= DOC GHI FILE LOP =============
+
+// LOP
 void docfileLop(DS_LOP &ds_lop);
 void ghifileLop(DS_LOP ds_lop);
 void createFileSV(char m_lop[16]);
+// SINH VIEN
+void docfileSV(DS_SINH_VIEN &ds_sv,char m_lop[16]);
+void ghifileSV(DS_SINH_VIEN &ds_sv,char m_lop[16]);
 
-// xy ly lop
+//=================================================
 int kttrungLop(DS_LOP ds_lop,char m_lop[])
 {
 	for(int i=0;i<ds_lop.sl;i++)
@@ -130,26 +144,39 @@ int kttrungSV(DS_SINH_VIEN ds_sv,char m_sv[16])
 	}
 	return -1;
 }
-void themSV(DS_SINH_VIEN &ds_sv,char m_sv[16],char h_sv[21],char t_sv[11],char p_sv[5],char ps[17])
+SINH_VIEN *timSV(DS_SINH_VIEN ds_sv,char m_sv[16])
 {
+	for(SINH_VIEN *p=ds_sv.phead;p!=NULL;p=p->pnext)
+	{
+		if(strcmp(m_sv,p->masv)==0)
+		{
+			return p;
+		}
+	}
+	outtextxy(1030,150,"MA SINH VIEN KHONG TON TAI !");
+	return NULL;
+}
+void themSV(DS_SINH_VIEN &ds_sv,char m_sv[16],char h_sv[21],char t_sv[11],char p_sv[5],char ps[17],char m_lop[16])
+{
+	cout<<"them 1"<<endl;
+	setbkcolor(MAU_XANH_DUONG_NHAT);
 	SINH_VIEN *p=khoitao(m_sv,h_sv,t_sv,p_sv,ps);
-	int temp=kttrungSV(ds_sv,p->masv);
+	int temp=kttrungSV(ds_sv,m_sv);
 	if(temp==-1)
 	{
 		if(ds_sv.phead==NULL)
 		{
-			ds_sv.phead=p;
+			ds_sv.phead=ds_sv.ptail=p;
 		}
 		else
 		{
-			p->pnext=ds_sv.phead;
-			ds_sv.phead=p;
+			ds_sv.ptail->pnext=p;
+			p->pnext=NULL;
+			ds_sv.ptail=p;
 		}
-	}
-	else
-	{
-		setbkcolor(MAU_XANH_DUONG_NHAT);
-		outtextxy(1030,150,"MA SINH VIEN TRUNG !");
+		ghifileSV(ds_sv,m_lop);
+		ds_sv.sl++;
+		cout<<"them xong roi ne"<<endl;
 	}
 }
 
@@ -160,17 +187,59 @@ void docfileSV(DS_SINH_VIEN &ds_sv,char m_lop[16])
 	strcpy(m_lop_temp,m_lop);
 	ifstream fileIn;
 	fileIn.open(strcat(m_lop_temp,".txt"),ios_base :: in);
-	fileIn>>ds_sv.sl;
+	fileIn>>m_lop;
 	fileIn.ignore();
+	SINH_VIEN sv;
+	while(!fileIn.eof())
+	{
+		fileIn.getline(sv.masv, sizeof(sv.masv),'\n');
+		
+		if(strlen(sv.masv) == 0) {  //kiem tra ky tu space cuoi cung trong file
+			break;
+		}
+		fileIn.getline(sv.ho, sizeof(sv.ho),'\n');
+		fileIn.getline(sv.ten, sizeof(sv.ten),'\n');
+		fileIn.getline(sv.phai, sizeof(sv.phai), '\n');
+		fileIn.getline(sv.password, sizeof(sv.password), '\n');
+			
+		themSV(ds_sv,sv.masv,sv.ho,sv.ten,sv.phai,sv.password,m_lop);	
+	}
+	fileIn.close();
+	cout<<"doc 1:"<<endl;
+}
+//void giaophongSV(DS_SINH_VIEN &ds_sv)
+//{
+//	for(int i=0;i<ds_sv.sl;i++)
+//	{
+//		SINH_VIEN *p=ds_sv.phead;
+//		cout<<"ma sv: "<<p->masv;
+//		ds_sv.phead=ds_sv.phead->pnext;
+//		p->pnext=NULL;
+//		delete p;
+//	}
+//	ds_sv.sl=0;
+//	cout<<"ds_sv.sl: "<<ds_sv.sl<<endl;
+//	cout<<"giai phong xong"<<endl;
+//}
+void ghifileSV(DS_SINH_VIEN &ds_sv,char m_lop[16])
+{
+	char m_lop_temp[16]="";
+	strcpy(m_lop_temp,m_lop);
+	
+	ofstream fileOut;
+	fileOut.open(strcat(m_lop_temp,".txt"),ios_base :: out);
+	SINH_VIEN *p= new SINH_VIEN;
+	fileOut <<m_lop<< endl;
 	for(SINH_VIEN *p=ds_sv.phead;p!=NULL;p=p->pnext)
 	{
-		fileIn.getline(p->masv,sizeof(p->masv),'\n');
-		fileIn.getline(p->ho,sizeof(p->ho),'\n');
-		fileIn.getline(p->ten,sizeof(p->ten),'\n');
-		fileIn.getline(p->phai,sizeof(p->phai),'\n');
-		fileIn.getline(p->password,sizeof(p->password),'\n');
-	} 
-	fileIn.close();
+		fileOut << p->masv << endl;
+		fileOut << p->ho << endl;
+		fileOut << p->ten << endl;
+		fileOut << p->phai << endl;
+		fileOut << p->password << endl;
+	}
+	fileOut.close();
+	cout<<"ghi file xong"<<endl;
 }
 void createFileSV(char m_lop[16]) // tao file
 {

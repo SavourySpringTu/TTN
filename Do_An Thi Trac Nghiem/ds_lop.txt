@@ -1,4 +1,4 @@
-4
+5
 D19cqcn01
 Cong Nghe Thong Tin Khoa 2019 Lop 1
 D19cqcn02
@@ -7,3 +7,5 @@ D19cqcn03
 Cong Nghe Thong Tin Khoa 2019 Lop 3
 D19cqtn01
 Quan Tri Kinh Doanh Khoa 2019 Lop 1
+D19cqtn02
+Quan Tri Kinh Doanh Khoa 2019 Lop 2

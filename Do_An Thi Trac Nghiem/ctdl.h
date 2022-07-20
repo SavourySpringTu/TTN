@@ -22,6 +22,7 @@ typedef struct sinh_vien SINH_VIEN;
 struct ds_sinh_vien
 {
 	sinh_vien *phead=NULL;
+	sinh_vien *ptail=NULL;
 	int sl=0;	
 };
 typedef struct ds_sinh_vien DS_SINH_VIEN;
