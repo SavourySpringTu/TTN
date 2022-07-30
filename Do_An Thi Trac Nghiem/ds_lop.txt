@@ -1,11 +1,25 @@
-5
+12
 D19cqcn01
 Cong Nghe Thong Tin Khoa 2019 Lop 1
 D19cqcn02
 Cong Nghe Thong Tin Khoa 2019 Lop 2
 D19cqcn03
 Cong Nghe Thong Tin Khoa 2019 Lop 3
-D19cqtn01
-Quan Tri Kinh Doanh Khoa 2019 Lop 1
-D19cqtn02
-Quan Tri Kinh Doanh Khoa 2019 Lop 2
+D19cqvt01
+Vien Thong Khoa 2019 Lop 1
+D19cqvt02
+Vien Thong Khoa 2019 Lop 2
+D19cqvt03
+Vien Thong Khoa 2019 Lop 3
+D19cqdt01
+Dien Dien Tu Khoa 2019 Lop 1
+D19cqdt02
+Dien Dien Tu Khoa 2019 Lop 2
+D19cqdt03
+Dien Dien Tu Khoa 2019 Lop 3
+D18cqcn01
+Cong Nghe Thong Tin Khoa 2018 Lop 1
+D18cqcn02
+Cong Nghe Thong Tin Khoa 2018 Lop 2
+D18cqcn03
+Cong Nghe Thong Tin Khoa 2018 Lop 3

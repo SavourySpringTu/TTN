@@ -8,6 +8,21 @@
 
 using namespace std;
 
+// diem thi
+struct diem_thi// ds lien ket don
+{
+	char mamh[16];
+	float diem;
+	diem_thi *pnext;
+};
+typedef struct diem_thi DIEM_THI;
+struct ds_diem_thi 
+{
+	diem_thi *phead=NULL;
+	int sl=0;
+};
+typedef struct ds_diem_thi DS_DIEM_THI;
+
 // sinh vien
 struct sinh_vien // ds lien ket don
 {
@@ -16,7 +31,8 @@ struct sinh_vien // ds lien ket don
 	char ten[11];
 	char phai[5];
 	char password[17];
-	sinh_vien *pnext;	
+	sinh_vien *pnext;
+	DIEM_THI *first_DIEM_THI;	
 };
 typedef struct sinh_vien SINH_VIEN;
 struct ds_sinh_vien
@@ -37,7 +53,7 @@ struct cau_hoi // ds tuyen tinh
 	char dapanC[126];
 	char dapanD[126];
 	char dapan;
-	char mamh[16];	
+	bool kt;
 };
 typedef struct cau_hoi CAU_HOI;
 struct ds_cau_hoi
@@ -50,34 +66,14 @@ typedef struct ds_cau_hoi DS_CAU_HOI;
 // mon hoc
 struct mon_hoc // cay nhi phan
 {
-	char mamh[16];
+	char mamh[16]; // khoa chinh
 	char tenmh[51];
 	mon_hoc *left;
 	mon_hoc *right;
 	DS_CAU_HOI ds_cau_hoi;
 };
-typedef struct mon_hoc *tree;
-struct ds_mon_hoc
-{
-	tree ds=NULL;
-	int sl=0;
-};
-typedef struct ds_mon_hoc DS_MON_HOC;
-
-// diem thi
-struct diem_thi// ds lien ket don
-{
-	char mamh[16];
-	float diem;
-	diem_thi *pnext;
-};
-typedef struct diem_thi DIEM_THI;
-struct ds_diem_thi 
-{
-	diem_thi *phead=NULL;
-	int sl=0;
-};
-typedef struct ds_diem_thi DS_DIEM_THI;
+typedef struct mon_hoc MON_HOC;
+typedef MON_HOC* PTR_MH;
 
 // lop
 struct lop // mang con tro
@@ -89,7 +85,7 @@ struct lop // mang con tro
 typedef struct lop LOP;
 struct ds_lop
 {
-	LOP *ds[10];
+	LOP *ds[25];
 	int sl=0;
 };
 typedef struct ds_lop DS_LOP;

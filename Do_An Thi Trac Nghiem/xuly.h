@@ -1,9 +1,10 @@
+void resetThongBao();
 // ================= XU LY LOP =====================
 
 int kttrungLop(DS_LOP ds_lop,char m_lop[]);
 void themLop(DS_LOP &ds_lop,LOP lop);
 void xoaLop(DS_LOP &ds_lop,LOP lop);
-void xuaLop(DS_LOP &ds_lop,char temp1[],char m_lopxua[],char t_lopxua[]);
+void suaLop(DS_LOP &ds_lop,char m_lop_edit[16],char t_lop_edit[51]);
 
 // ================== XU LY SINH VIEN =============
 
@@ -44,18 +45,18 @@ void themLop(DS_LOP &ds_lop,LOP lop)
 		ds_lop.ds[ds_lop.sl]=new LOP;
 		*ds_lop.ds[ds_lop.sl]=lop;
 		ds_lop.sl++;
-		ghifileLop(ds_lop);
+		resetThongBao();
 		outtextxy(1030,150,"THEM THANH CONG !");
 	}
 	else
 	{
+		resetThongBao();
 		outtextxy(1030,150,"LOI MA LOP TRUNG !");
 	}
 }
 void xoaLop(DS_LOP &ds_lop,LOP lop)
 {
 	int temp=kttrungLop(ds_lop,lop.malop);
-	cout<<"temp la: "<<temp<<endl;
 	if (temp!=-1)
 	{
 		for(int i=temp;i<ds_lop.sl-1;i++)
@@ -65,33 +66,35 @@ void xoaLop(DS_LOP &ds_lop,LOP lop)
 			strcpy(ds_lop.ds[i]->tenlop, ds_lop.ds[i+1]->tenlop);
 		}
 		ds_lop.sl--;
-		setbkcolor(MAU_XANH_DUONG_NHAT );
-		ghifileLop(ds_lop);
+		resetThongBao();
 		outtextxy(1030,150,"XOA THANH CONG !");
 	}
 	else
 	{
-		setbkcolor(MAU_XANH_DUONG_NHAT );
+		resetThongBao();
+		setbkcolor(MAU_XANH_DUONG_NHAT);
+		setcolor(MAU_DEN);
 		outtextxy(1030,150,"XOA KHONG THANH CONG !");
 	}
 }
-void xuaLop(DS_LOP &ds_lop,char temp1[],char m_lopxua[],char t_lopxua[])
+void suaLop(DS_LOP &ds_lop,char m_lop_edit[16],char t_lop_edit[51])
 {
-	int temp=kttrungLop(ds_lop,temp1);
+	int temp=kttrungLop(ds_lop,m_lop_edit);
 	setbkcolor(MAU_XANH_DUONG_NHAT);
 	if(temp!=-1)
 	{
-		strcpy(ds_lop.ds[temp]->malop,m_lopxua);
-		strcpy(ds_lop.ds[temp]->tenlop,t_lopxua);
-		ghifileLop(ds_lop);
-		outtextxy(1030,150,"XUA THANH CONG !");
+		strcpy(ds_lop.ds[temp]->tenlop,t_lop_edit);
+		resetThongBao();
+		outtextxy(1030,150,"SUA THANH CONG !");
 	}
 	else
 	{
-		outtextxy(1030,150,"XUA KHONG THANH CONG !");
+		resetThongBao();
+		outtextxy(1030,150,"SUA KHONG THANH CONG !");
 	}
 }
 
+// doc ghi file lop
 void docfileLop(DS_LOP &ds_lop)
 {
 	ifstream fileIn;
@@ -116,7 +119,7 @@ void ghifileLop(DS_LOP ds_lop)
 	{
 		fileOut << ds_lop.ds[i]->malop << endl;
 		fileOut << ds_lop.ds[i]->tenlop << endl;
-
+		createFileSV(ds_lop.ds[i]->malop);
 	}
 	fileOut.close();
 }
@@ -153,12 +156,12 @@ SINH_VIEN *timSV(DS_SINH_VIEN ds_sv,char m_sv[16])
 			return p;
 		}
 	}
-	outtextxy(1030,150,"MA SINH VIEN KHONG TON TAI !");
+	resetThongBao();
+	outtextxy(1030,150,"MASV KHONG TON TAI !");
 	return NULL;
 }
 void themSV(DS_SINH_VIEN &ds_sv,char m_sv[16],char h_sv[21],char t_sv[11],char p_sv[5],char ps[17],char m_lop[16])
 {
-	cout<<"them 1"<<endl;
 	setbkcolor(MAU_XANH_DUONG_NHAT);
 	SINH_VIEN *p=khoitao(m_sv,h_sv,t_sv,p_sv,ps);
 	int temp=kttrungSV(ds_sv,m_sv);
@@ -174,9 +177,47 @@ void themSV(DS_SINH_VIEN &ds_sv,char m_sv[16],char h_sv[21],char t_sv[11],char p
 			p->pnext=NULL;
 			ds_sv.ptail=p;
 		}
-		ghifileSV(ds_sv,m_lop);
+		cout<<"them doc msv:"<<p->masv<<endl;
 		ds_sv.sl++;
-		cout<<"them xong roi ne"<<endl;
+	}
+}
+void xoaSV(DS_SINH_VIEN &ds_sv,char m_sv[16],char m_lop[16])
+{
+	for(SINH_VIEN *p=ds_sv.phead;p!=NULL;p=p->pnext)
+	{
+		if(strcmp(ds_sv.phead->masv,m_sv)==0)
+		{
+			ds_sv.phead=p->pnext;
+			delete p;
+			break;
+		}
+		else if(strcmp(p->pnext->masv,m_sv)==0)
+		{
+			SINH_VIEN *q=p->pnext;
+			p->pnext=q->pnext;
+			delete q;
+			break;
+		}
+	}
+	resetThongBao();
+	outtextxy(1030,150,"XOA SINH VIEN THANH CONG !");
+}
+void suaSV(DS_SINH_VIEN &ds_sv,char m_lop[16],char m_sv_edit[16],char t_sv_edit[11],char h_sv_edit[21],char p_sv_edit[5],char ps_edit[17])
+{
+	SINH_VIEN *p=timSV(ds_sv,m_sv_edit);
+	if(p==NULL)
+	{
+		resetThongBao();
+		outtextxy(1030,150,"MA SINH VIEN KHONG TON TAI !");
+	}
+	else
+	{
+		strcpy(p->ho,h_sv_edit);
+		strcpy(p->ten,t_sv_edit);
+		strcpy(p->phai,p_sv_edit);
+		strcpy(p->password,ps_edit);
+		resetThongBao();
+		outtextxy(1030,150,"SUA THANH CONG");	
 	}
 }
 
@@ -205,22 +246,8 @@ void docfileSV(DS_SINH_VIEN &ds_sv,char m_lop[16])
 		themSV(ds_sv,sv.masv,sv.ho,sv.ten,sv.phai,sv.password,m_lop);	
 	}
 	fileIn.close();
-	cout<<"doc 1:"<<endl;
+	cout<<"doc file sv xong:"<<endl;
 }
-//void giaophongSV(DS_SINH_VIEN &ds_sv)
-//{
-//	for(int i=0;i<ds_sv.sl;i++)
-//	{
-//		SINH_VIEN *p=ds_sv.phead;
-//		cout<<"ma sv: "<<p->masv;
-//		ds_sv.phead=ds_sv.phead->pnext;
-//		p->pnext=NULL;
-//		delete p;
-//	}
-//	ds_sv.sl=0;
-//	cout<<"ds_sv.sl: "<<ds_sv.sl<<endl;
-//	cout<<"giai phong xong"<<endl;
-//}
 void ghifileSV(DS_SINH_VIEN &ds_sv,char m_lop[16])
 {
 	char m_lop_temp[16]="";
@@ -239,10 +266,53 @@ void ghifileSV(DS_SINH_VIEN &ds_sv,char m_lop[16])
 		fileOut << p->password << endl;
 	}
 	fileOut.close();
-	cout<<"ghi file xong"<<endl;
+	cout<<"ghi sv file xong"<<endl;
 }
 void createFileSV(char m_lop[16]) // tao file
 {
 	ofstream MyFile(strcat(m_lop,".txt"));
 	MyFile.close();
 }
+
+// xy ly mon hoc
+mon_hoc* kttrungMH(PTR_MH p,char m_mh[16])
+{
+	if(p==NULL)
+	{
+		return NULL;
+	}
+	else
+	{
+		p=kttrungMH(p->left,m_mh);
+		if(strcmp(p->mamh,m_mh)==0)
+			return p;
+		p=kttrungMH(p->right,m_mh);
+	}
+	return NULL;
+}
+void themMH(PTR_MH &t, char m_mh[16],char t_mh[51])
+{
+	if(t==NULL)
+	{
+		PTR_MH p=new MON_HOC;
+		strcpy(p->mamh,m_mh);
+		strcpy(p->tenmh,t_mh);
+		t=p;
+		t->left=NULL;
+		t->right=NULL;
+		resetThongBao();
+		outtextxy(1030,150,"THEM THANH CONG");	
+	}
+	else
+	{
+		if(strcmp(t->mamh,m_mh)>0)
+		{
+			themMH(t->left,m_mh,t_mh);
+		}
+		else if(strcmp(t->mamh,m_mh)<0)
+		{
+			themMH(t->right,m_mh,t_mh);
+		}
+	}
+}
+// doc ghi file mon phoc
