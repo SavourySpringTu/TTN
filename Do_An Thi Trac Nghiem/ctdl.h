@@ -47,13 +47,12 @@ typedef struct ds_sinh_vien DS_SINH_VIEN;
 struct cau_hoi // ds tuyen tinh
 {
 	int ID;
-	char noidung[126];
-	char dapanA[126];
-	char dapanB[126];
-	char dapanC[126];
-	char dapanD[126];
-	char dapan;
-	bool kt;
+	char noidung[72];
+	char dapanA[72];
+	char dapanB[72];
+	char dapanC[72];
+	char dapanD[72];
+	char dapan[2];
 };
 typedef struct cau_hoi CAU_HOI;
 struct ds_cau_hoi
@@ -70,17 +69,22 @@ struct mon_hoc // cay nhi phan
 	char tenmh[51];
 	mon_hoc *left;
 	mon_hoc *right;
-	DS_CAU_HOI ds_cau_hoi;
+	DS_CAU_HOI ds_ch;
 };
 typedef struct mon_hoc MON_HOC;
 typedef MON_HOC* PTR_MH;
-
+//struct ds_mon_hoc
+//{
+//	PTR_MH tree=NULL;
+//	int sl=0;
+//};
+//typedef struct ds_mon_hoc DS_MON_HOC;
 // lop
 struct lop // mang con tro
 {
 	char malop[16];
 	char tenlop[51];
-	DS_SINH_VIEN ds_sinh_vien;
+	DS_SINH_VIEN *first_SINH_VIEN= new DS_SINH_VIEN[100];
 };
 typedef struct lop LOP;
 struct ds_lop
