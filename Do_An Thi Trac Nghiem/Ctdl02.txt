@@ -1,0 +1,78 @@
+11
+172
+Ai Day Mon Cau Truc Du Lieu Va Giai Thuat
+Luu Nguyen Ky Thu
+Bui Xuan Tu
+Nguyen Duc Ngoc
+To Gia Bao
+A
+968
+1 Cong 1 Bang May
+3
+5
+7
+2
+D
+276
+5 Cong 5 Bang May
+6
+5
+10
+20
+C
+111
+Dac diem cua giai thuat de quy
+Tat ca deu dung
+Sau moi lan co loi goi de quy thi kich thuoc cua bai 
+Co mot truong hop dac biet truong hop suy bien Khi 
+Trong thu tuc de quy co loi goi den chinh thu tuc do
+A
+750
+uu diem cua viec cai dat danh sach bang mang
+viec truy nhap vao phan tu cua mang duoc thuc hien truc tiep
+Co the thay doi so luong phan tu theo y muon cua nguoi dung
+Co the bo sung hoac xoa mot phan tu bat ky trong mang
+Tat ca cac y tren deu dung
+A
+980
+Danh sach tuyen tinh dang ngan xep lam viec theo nguyen tac
+FIFO( first in first out)
+LILO(last in last out)
+FOLO( fisrt out last out)
+LIFO(last in first out)
+D
+550
+Hang doi con duoc goi la danh sach kieu
+LOLO
+FILO
+LIFO
+FIFO
+D
+570
+De them mot doi tuong x bat ky vao Stack thao tac thuong dung
+EMPTY(x)
+TOP(x)
+PUSH(x)
+POP(x)
+C
+286
+De lay loai bo mot doi tuong ra khoi Stack thao tac thuong dung
+FULL(x)
+EMPTY(x)
+POP(x)
+PUSH(x)
+C
+666
+De bieu dien Stack, ta thuong su dung kieu du lieu nao sau day
+Kieu ban ghi
+Danh sach moc noi va mang du lieu
+Danh sach moc noi
+Mang du lieu
+B
+542
+Thao tac POP(x) dung trong Stack la de
+Xoa bo mot phan tu bat ki khoi Stack
+Xoa bo mot day cac phan tu ra khoi Stack
+Lay phan tu dau tien ra khoi Stack
+Lay mot phan tu cuoi cung ra khoi dinh Stack
+D

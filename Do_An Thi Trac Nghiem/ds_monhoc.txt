@@ -2,5 +2,23 @@ Ctdl01
 Cau Truc Du Lieu Va Giai Thuat Lop 1
 Ctdl02
 Cau Truc Du Lieu Va Giai Thuat Lop 2
-Ctdl03
-Cau Truc Du Lieu Va Giai Thuat Lop 3
+Gdtc01
+Giao Duc The Chat Lop 1
+Gdtc02
+Giao Duc The Chat Lop 2
+Gt01
+Giai Tich Lop 1
+Gt02
+Giai Tich Lop 2
+Ktmt01
+Ki Thuat May Tinh Lop 1
+Ktmt02
+Ki Thuat May Tinh Lop 2
+Kts01
+Ki Thuat So Lop 1
+Kts02
+Ki Thuat So Lop 2
+Vl01
+Vat Ly Lop 1
+Vl02
+Vat Ly Lop 2

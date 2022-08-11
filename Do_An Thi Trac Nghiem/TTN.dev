@@ -91,7 +91,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=xuly.h
+FileName=..\..\test.cpp
 CompileCpp=1
 Folder=
 Compile=1

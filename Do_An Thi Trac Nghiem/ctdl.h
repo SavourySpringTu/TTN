@@ -73,12 +73,7 @@ struct mon_hoc // cay nhi phan
 };
 typedef struct mon_hoc MON_HOC;
 typedef MON_HOC* PTR_MH;
-//struct ds_mon_hoc
-//{
-//	PTR_MH tree=NULL;
-//	int sl=0;
-//};
-//typedef struct ds_mon_hoc DS_MON_HOC;
+
 // lop
 struct lop // mang con tro
 {
@@ -97,8 +92,17 @@ typedef struct ds_lop DS_LOP;
 // bai thi
 struct bai_thi
 {
-	int socauhoi;
-	char* dapanchon;
-	cau_hoi* cht;
+	int slc;
+	char masv[16];
+	char mamh[16];
+	char *ds_tl;
+	int *ds_ch_thi;
 };
+typedef struct bai_thi BAI_THI;
+struct ds_bai_thi
+{
+	BAI_THI *ds[100];
+	int sl=0;	
+};
+typedef struct ds_bai_thi DS_BAI_THI;
 

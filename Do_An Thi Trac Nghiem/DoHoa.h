@@ -10,7 +10,8 @@ int mapID[WIDTH][HEIGHT];
 
 // Map ID
 void ResetmapID();
-void GanID();
+void GanID(int x1, int y1, int x2, int y2, int id);
+void create_circle(int x, int y,int radius,int id);
 
 void reset_layout(int x1,int y1,int x2,int y2, int color);
 
@@ -42,7 +43,7 @@ void drawSV_1();
 
 void drawMonhoc(PTR_MH &p);
 void drawDS_MH(PTR_MH p,int trangMH,int &slmh);
-void outputDS_MH(PTR_MH p,int y,int i,int trangMH,int &slmh,int i_temp);
+void outputDS_MH(PTR_MH p,int &y,int &i,int trangMH,int &slmh,int &i_temp)  ;
 
 void drawDS_CH(DS_CAU_HOI &ds_ch,int trangCH);
 void drawCauhoi();
@@ -50,6 +51,9 @@ void drawCauhoi_1(char m_mh[16]);
 void drawthemCH(int id);
 void drawsuaCH(DS_CAU_HOI ds_ch,int id);
 void drawThi();
+void drawThi_1(int trangThi);
+void drawBai_Thi(DS_CAU_HOI ds_ch,int arr[],int trangThi);
+void drawinputMSV(PTR_MH p,int slmh);
 
 // xu ly
 void sign();
@@ -58,11 +62,19 @@ void SV(DS_LOP &ds_lop);
 void lop(DS_LOP &ds_lop);
 void monhoc(PTR_MH &p,int &slmh);
 void cauhoi(PTR_MH p,int slmh);
-void Thi(PTR_MH &p,int &slmh);
+void Thi(PTR_MH p,int &slmh,char m_sv[16]);
+void inputMSV(PTR_MH p,int slmh,DS_LOP ds_lop);
 
 //
 void all();
 
+//======================================================
+
+void create_circle(int x, int y,int radius,int id) 
+{
+	circle(x,y,radius);
+	GanID(x-radius,y-radius,x+radius,y+radius,id);
+}
 void resetThongBao()
 {
 	TaoHCN(1010,55,1355,300,3,0,3);
@@ -79,7 +91,6 @@ void ResetmapID()
 		}
 	}
 }
-
 void GanID(int x1, int y1, int x2, int y2, int id)
 {
 	for (int i = x1; i < x2; i++)
@@ -257,16 +268,19 @@ void drawDS_LOP(DS_LOP &ds_lop,int trang)
 	{
 		int tempstt=i;
 		char stt[2]=""; 
-		cout<<i<<" "<<ds_lop.ds[i]->malop<<", "<<ds_lop.ds[i]->tenlop<<endl;
 		outtextxy(165,y,ds_lop.ds[i]->malop);
 		outtextxy(415,y,ds_lop.ds[i]->tenlop);
 		outtextxy(75,y,itoa(tempstt+1,stt,10));
 		y+=40;
 	}
 }
-void outputDS_MH(PTR_MH p,int y,int i,int trangMH,int &slmh,int i_temp) 
+void outputDS_MH(PTR_MH p,int &y,int &i,int trangMH,int &slmh,int &i_temp) 
 {
-	if(p!=NULL)
+	if(p==NULL)
+	{
+		return;
+	}
+	else
 	{
 		outputDS_MH(p->left,y,i,trangMH,slmh,i_temp);
 		if(i<=((trangMH+1)*10) && i==i_temp)
@@ -281,7 +295,7 @@ void outputDS_MH(PTR_MH p,int y,int i,int trangMH,int &slmh,int i_temp)
 			y+=40;
 		}
 		i_temp++;
-		outputDS_MH(p->right,y,i,trangMH,slmh,i_temp);
+		outputDS_MH(p->right,y,i,trangMH,slmh,i_temp);  
 	}
 }
 void drawDS_MH(PTR_MH p,int trangMH,int &slmh)
@@ -342,11 +356,11 @@ void drawSign()
 		
 	settextstyle(10,0,2);
 	outtextxy(485,360,"User");
-	TaoHCN(540,350,840,400,MAU_TRANG,1,MAU_DEN);
-	GanID(540,350,840,400,1);
+	TaoHCN(540,350,840,390,MAU_TRANG,1,MAU_DEN);
+	GanID(540,350,840,390,1);
 	outtextxy(435,460,"Password");
-	TaoHCN(540,450,840,500,MAU_TRANG,2,MAU_DEN);
-	GanID(540,450,840,500,2);
+	TaoHCN(540,450,840,490,MAU_TRANG,2,MAU_DEN);
+	GanID(540,450,840,490,2);
 		
 	settextstyle(10,0,2);
 	setbkcolor(MAU_HONG);
@@ -362,19 +376,24 @@ void drawSign()
 	setbkcolor(MAU_XANH_DUONG_NHAT);
 	settextstyle(10,0,2);
 	setcolor(MAU_TRANG);
-	outtextxy(1000,720,"GV: LU NGUYEN KY THU");
-	outtextxy(1000,770,"N19DCCN173- BUI XUAN TU");
-	outtextxy(1000,800,"N19DCCN015-NGUYEN THANH NAM");  
+	outtextxy(1000,720,"GV: LUU NGUYEN KY THU");
+	outtextxy(1000,770,"N19DCCN173 - BUI XUAN TU");
+	outtextxy(1000,800,"N19DCCN015 - NGUYEN THANH NAM");  
 }
 void sign()
 {
-	DS_LOP ds_lop;
-	DS_SINH_VIEN ds_sv;
 	int x=-1;
 	int y=-1;
     drawSign();
-	char user[5]="";  
-	char password[5]="";             
+	char user[16]="";  
+	char password[16]=""; 
+	
+	DS_LOP ds_lop;
+	docfileLop(ds_lop); 
+	for(int i=0;i<ds_lop.sl;i++)
+	{
+		docfileSV(ds_lop.ds[i]->first_SINH_VIEN,ds_lop.ds[i]->malop);
+	}   
     while(true)
 	{
 		if(ismouseclick(WM_LBUTTONDOWN))
@@ -384,29 +403,50 @@ void sign()
 			{
 				case 1:
 					{
-						nhapText(545,360,840,400,user,5,0);
+						nhapText(545,360,840,390,user,16,0);
 						break;
 					}
 				case 2:
 					{
-						nhapText(545,460,840,500,password,5,0);
+						nhapText(545,460,840,490,password,16,0);
 						break;
 					}
 				case 3:
 					{
-		//				cout<< sizeof user / sizeof(char)<<endl;
-		//				cout<< sizeof user / sizeof(char)<<endl;
-		//				if(user[0]=='G'&&user[1]=='v' && password[0]=='G' && password[1]=='v')
-		//				{
-							cout<<"bam zo dang nhap ne"<<endl;
+						if(strcmp(user,"")==0 || strcmp(password,"")==0)
+						{
+							settextstyle(10,0,3);
+							setbkcolor(MAU_XANH_DUONG_NHAT);
+							setcolor(MAU_TRANG);
+							outtextxy(580,650,"THONG TIN RONG !");	
+							break;						
+						}
+						if(strcmp(user,"Gv")==0 && strcmp(password,"Gv")==0)
+						{
 							menu();
-		//				}
-		//				else
-		//				{
-		//					settextstyle(10,0,3);
-		//					setcolor(MAU_DO);
-		//					outtextxy(400,650,"SAI THONG TIN TAI KHOAN !");
-		//				}
+						}
+						else
+						{
+							for(int i=0;i<ds_lop.sl;i++)
+							{
+								for(SINH_VIEN *x=ds_lop.ds[i]->first_SINH_VIEN->phead;x!=NULL;x=x->pnext)
+								{
+									if(strcmp(user,x->masv)==0 && strcmp(password,x->password)==0)
+									{
+										int slmh;
+										char m_sv_thi[16]="";
+										strcpy(m_sv_thi,x->masv);
+										PTR_MH p=NULL;
+										docfileMH(p,slmh);
+										Thi(p,slmh,x->masv);
+									}
+								}
+							} 
+							settextstyle(10,0,3);
+							setbkcolor(MAU_XANH_DUONG_NHAT);
+							setcolor(MAU_DO);
+							outtextxy(530,650,"SAI THONG TIN TAI KHOAN !");
+						}
 						break;						
 					}
 				case 99:
@@ -475,7 +515,7 @@ void menu()
 	for(int i=0;i<ds_lop.sl;i++)
 	{
 		docfileSV(ds_lop.ds[i]->first_SINH_VIEN,ds_lop.ds[i]->malop);
-	}
+	}  
 	while(true)
 	{
 		if(ismouseclick(WM_LBUTTONDOWN))
@@ -515,7 +555,7 @@ void menu()
 					}
 				case 6:
 					{
-						Thi(p,slmh);
+						inputMSV(p,slmh,ds_lop);
 						break;
 					}
 			}
@@ -646,6 +686,7 @@ void SV(DS_LOP &ds_lop)
 			{
 				case 1:
 					{
+						cout<<"ra menu"<<endl;
 						menu();
 						break;
 					}
@@ -691,10 +732,7 @@ void SV(DS_LOP &ds_lop)
 							outtextxy(1030,150,"THONG TIN RONG !");	
 							break;
 						}
-						cout<<"1"<<endl;
 						int temp=kttrungLop(ds_lop,m_lop);
-						cout<<"temp= "<<ds_lop.ds[temp]->first_SINH_VIEN<<endl;
-						cout<<"2"<<endl;
 						if(temp!=-1)
 						{
 							drawSV_1();
@@ -1143,6 +1181,7 @@ void lop(DS_LOP &ds_lop)
 							outtextxy(1030,170,"RONG !");
 							break;
 						}
+						cout<<"1"<<endl;
 						int kt=kttrungLop(ds_lop,m_lop);
 						if(ds_lop.ds[temp]->first_SINH_VIEN->sl>0)
 						{
@@ -1153,11 +1192,15 @@ void lop(DS_LOP &ds_lop)
 						else if(kt!=-1)
 						{
 							char *abc=m_lop;
+							cout<<"2"<<endl;
 							xoaLop(ds_lop,m_lop);							
 							drawDS_LOP(ds_lop,trang);
 							remove(strcat(m_lop,".txt"));
 							strcpy(m_lop,abc);
 							ghifileLop(ds_lop);
+							cout<<"3"<<endl;
+							resetThongBao();
+							outtextxy(1030,150,"XOA LOP THANH CONG !");	
 							break;
 						}
 						else
@@ -1290,6 +1333,7 @@ void monhoc(PTR_MH &p,int &slmh)
 	char t_mh[51]="";
 	char t_mh_edit[51]="";	
 	
+	cout<<"chay 1"<<endl;
 	drawMonhoc(p);
 	drawDS_MH(p,trangMH,slmh);	
 	
@@ -1300,8 +1344,10 @@ void monhoc(PTR_MH &p,int &slmh)
 			getmouseclick(WM_LBUTTONDOWN,x,y);
 			switch(mapID[x][y])
 			{
+				cout<<"mapID[x][y]: "<<mapID[x][y]<<endl;
 				case 1:
 					{
+						cout<<"zo menu"<<endl;
 						menu();
 						break;
 					}
@@ -1343,16 +1389,16 @@ void monhoc(PTR_MH &p,int &slmh)
 						nhapText(165,160,650,185,t_mh,51,0);
 						break;
 					}
-				case 6:
+				case 6: // THEM MH
 					{		
 						MON_HOC *temp_them=kttrungMH(p,m_mh);
 						if(temp_them==NULL)
 						{
 							themMH(p,m_mh,t_mh);
+							slmh++;	
 							drawDS_MH(p,trangMH,slmh);
 							resetThongBao();
 							outtextxy(1030,150,"THEM MON HOC THANH CONG");
-							slmh++;	
 						}
 						else
 						{
@@ -1361,16 +1407,17 @@ void monhoc(PTR_MH &p,int &slmh)
 						}
 						break;
 					}
-				case 7:
+				case 7: // XOA MH
 					{
 						MON_HOC *temp_xoa=kttrungMH(p,m_mh);
 						if(temp_xoa!=NULL)
 						{
-							xoaMH(p,m_mh,t_mh);
+							xoaMH(p,m_mh);
+							slmh--;
+							test(p);
 							drawDS_MH(p,trangMH,slmh);
 							resetThongBao();
 							outtextxy(1030,150,"XOA THANH CONG");
-							slmh--;
 						}
 						else
 						{
@@ -1652,6 +1699,61 @@ void cauhoi(PTR_MH p,int slmh)
 						}
 						break;
 					}
+				case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
+					{
+						resetThongBao();
+						setbkcolor(MAU_XANH_DUONG_NHAT );
+						int stt=mapID[x][y]-9;
+						if(slmh==0)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"DANH SACH RONG !");
+							break;
+						}
+						else if((mapID[x][y]+trangMH*10)-9>slmh)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"KHONG CO MON HOC !");
+						}
+						else
+						{
+							int z=1;
+							setbkcolor(MAU_TRANG);
+							setcolor(MAU_DEN);
+							reset_layout(161,151,390,175,MAU_TRANG);
+							MON_HOC *temp=duyet_theo_stt(p,z,stt+(trangMH*10));
+							strcpy(m_mh,temp->mamh);
+							outtextxy(165,150,m_mh);
+						}
+						break;							
+					}
+				case 20:case 21:case 22:case 23:case 25:case 24:case 26:case 27:case 28:case 29:case 30:
+					{
+						resetThongBao();
+						setbkcolor(MAU_XANH_DUONG_NHAT );
+						MON_HOC *a=kttrungMH(p,m_mh);
+						int stt=mapID[x][y]-20;
+						if(a->ds_ch.sl==0)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"DANH SACH RONG !");
+							break;
+						}
+						else if((mapID[x][y]+trangCH*10)-20>=a->ds_ch.sl)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"KHONG CO CAU HOI !");
+						}
+						else
+						{
+							reset_layout(221,196,370,225,MAU_TRANG);
+							setbkcolor(MAU_TRANG);
+							setcolor(MAU_DEN);
+							outtextxy(225,200,itoa(a->ds_ch.ds[stt+(trangCH*10)].ID,id_char,10));
+							id=a->ds_ch.ds[stt+(trangCH*10)].ID;
+						}
+						break;
+					}
 				case 31:
 					{
 	
@@ -1718,61 +1820,46 @@ void cauhoi(PTR_MH p,int slmh)
 						}				
 						break;
 					}
-				case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
+				case 40: // CHON DAP AN
 					{
-						resetThongBao();
-						setbkcolor(MAU_XANH_DUONG_NHAT );
-						int stt=mapID[x][y]-9;
-						if(slmh==0)
-						{
-							resetThongBao();
-							outtextxy(1030,150,"DANH SACH RONG !");
-							break;
-						}
-						else if((mapID[x][y]+trangMH*10)-9>slmh)
-						{
-							resetThongBao();
-							outtextxy(1030,150,"KHONG CO MON HOC !");
-						}
-						else
-						{
-							int z=1;
-							setbkcolor(MAU_TRANG);
-							setcolor(MAU_DEN);
-							reset_layout(161,151,390,175,MAU_TRANG);
-							MON_HOC *temp=duyet_theo_stt(p,z,stt+(trangMH*10));
-							strcpy(m_mh,temp->mamh);
-							outtextxy(165,150,m_mh);
-						}
-						break;							
-					}
-				case 20:case 21:case 22:case 23:case 25:case 24:case 26:case 27:case 28:case 29:case 30:
-					{
-						resetThongBao();
-						setbkcolor(MAU_XANH_DUONG_NHAT );
-						MON_HOC *a=kttrungMH(p,m_mh);
-						int stt=mapID[x][y]-20;
-						if(a->ds_ch.sl==0)
-						{
-							resetThongBao();
-							outtextxy(1030,150,"DANH SACH RONG !");
-							break;
-						}
-						else if((mapID[x][y]+trangCH*10)-20>=a->ds_ch.sl)
-						{
-							resetThongBao();
-							outtextxy(1030,150,"KHONG CO CAU HOI !");
-						}
-						else
-						{
-							reset_layout(221,196,370,225,MAU_TRANG);
-							setbkcolor(MAU_TRANG);
-							setcolor(MAU_DEN);
-							outtextxy(225,200,itoa(a->ds_ch.ds[stt+(trangCH*10)].ID,id_char,10));
-							id=a->ds_ch.ds[stt+(trangCH*10)].ID;
-						}
+						setcolor(MAU_DEN);	
+						fillellipse(42,320,5,5);
+						reset_layout(32,370,52,390,MAU_TRANG);
+						reset_layout(32,430,52,450,MAU_TRANG);
+						reset_layout(32,490,52,510,MAU_TRANG);
+						strcpy(d_an,"A");
 						break;
 					}
+				case 41:
+					{
+						setcolor(MAU_DEN);
+						fillellipse(42,380,5,5);
+						reset_layout(32,310,52,330,MAU_TRANG);
+						reset_layout(32,430,52,450,MAU_TRANG);
+						reset_layout(32,490,52,510,MAU_TRANG);						
+						strcpy(d_an,"B");
+						break;
+					}	
+				case 42:
+					{
+						setcolor(MAU_DEN);
+						fillellipse(42,440,5,5);
+						reset_layout(32,310,52,330,MAU_TRANG);
+						reset_layout(32,370,52,390,MAU_TRANG);
+						reset_layout(32,490,52,510,MAU_TRANG);												
+						strcpy(d_an,"C");
+						break;
+					}
+				case 43:
+					{
+						setcolor(MAU_DEN);
+						fillellipse(42,500,5,5);
+						reset_layout(32,310,52,330,MAU_TRANG);
+						reset_layout(32,370,52,390,MAU_TRANG);
+						reset_layout(32,430,52,450,MAU_TRANG);						
+						strcpy(d_an,"D");
+						break;
+					}									
 				case 90:
 					{
 						nhapText(70,170,955,195,nd,72,0);
@@ -1798,15 +1885,6 @@ void cauhoi(PTR_MH p,int slmh)
 						nhapText(70,490,955,515,d_an_D,72,0);
 						break;
 					}
-				case 95: // dap an
-					{
-						cout<<"d_ana"<<d_an<<endl;
-						cout<<"m_mha"<<m_mh<<endl;
-						nhapText(70,550,200,575,d_an,2,0);		
-						cout<<"d_ana1"<<d_an<<endl;
-						cout<<"m_mha1"<<m_mh<<endl;
-						break;
-					}
 				case 96: // them ch
 					{
 						if(strcmp(nd,"")==0||strcmp(d_an,"")==0||strcmp(d_an_A,"")==0||strcmp(d_an_B,"")==0||strcmp(d_an_C,"")==0||strcmp(d_an_D,"")==0)
@@ -1815,14 +1893,9 @@ void cauhoi(PTR_MH p,int slmh)
 							outtextxy(1030,150,"THONG TIN RONG !");
 							break;
 						}
-						themCH(p->ds_ch,id,nd,d_an_A,d_an_B,d_an_C,d_an_D,d_an);
-						strcpy(nd,"");
-						strcpy(d_an_A,"");
-						strcpy(d_an_B,"");
-						strcpy(d_an_C,"");
-						strcpy(d_an_D,"");
-						strcpy(d_an,"");
-						id = createID(p->ds_ch);
+						MON_HOC *a=kttrungMH(p,m_mh);
+						themCH(a->ds_ch,id,nd,d_an_A,d_an_B,d_an_C,d_an_D,d_an);
+						id = createID(a->ds_ch);
 						drawthemCH(id);
 						resetThongBao();
 						outtextxy(1030,150,"THEM THANH CONG !");
@@ -1959,8 +2032,15 @@ void drawthemCH(int id)
 	GanID(65,425,955,455,93);
 	TaoHCN(65,485,955,515,MAU_TRANG,94,MAU_DEN); 
 	GanID(65,485,955,515,94);
-	TaoHCN(65,545,200,575,MAU_TRANG,95,MAU_DEN); // d_an
-	GanID(65,545,200,575,95);	
+	setcolor(MAU_DEN);
+	create_circle(42,320,15,40);	
+	create_circle(42,380,15,41);
+	create_circle(42,440,15,42);
+	create_circle(42,500,15,43);
+	fillellipse(42,320,15,15);
+	fillellipse(42,380,15,15);
+	fillellipse(42,440,15,15);
+	fillellipse(42,500,15,15);
 	
 	TaoHCN(385,700,635,730,MAU_XANH_LA,96,MAU_DEN); // THEM CH
 	GanID(385,700,635,730,96);
@@ -2004,19 +2084,42 @@ void drawsuaCH(DS_CAU_HOI ds_ch,int id)
 	GanID(65,425,955,455,93);
 	TaoHCN(65,485,955,515,MAU_TRANG,94,MAU_DEN); 
 	GanID(65,485,955,515,94);
-	TaoHCN(65,545,200,575,MAU_TRANG,95,MAU_DEN); // d_an
-	GanID(65,545,200,575,95);	
+	setcolor(MAU_DEN);
+	create_circle(42,320,15,40);	
+	create_circle(42,380,15,41);
+	create_circle(42,440,15,42);
+	create_circle(42,500,15,43);
+	fillellipse(42,320,15,15);
+	fillellipse(42,380,15,15);
+	fillellipse(42,440,15,15);
+	fillellipse(42,500,15,15);	
 	
 	// TEXT CU~ 
-	setbkcolor(MAU_TRANG);
 	int i=kttrungCH(ds_ch,id) ;
+	setbkcolor(MAU_XANH_DUONG_NHAT);
+	setcolor(MAU_DEN);
+	if(strcmp(ds_ch.ds[i].dapan,"A")==0)
+	{
+		fillellipse(42,320,5,5);
+	}
+	else if(strcmp(ds_ch.ds[i].dapan,"B")==0)
+	{
+		fillellipse(42,380,5,5);
+	}
+	else if(strcmp(ds_ch.ds[i].dapan,"C")==0)
+	{
+		fillellipse(42,440,5,5);
+	}
+	else if(strcmp(ds_ch.ds[i].dapan,"D")==0)
+	{
+		fillellipse(42,500,5,5);
+	}
+	setbkcolor(MAU_TRANG);
 	outtextxy(70,170,ds_ch.ds[i].noidung);
 	outtextxy(70,310,ds_ch.ds[i].dapanA);
 	outtextxy(70,370,ds_ch.ds[i].dapanB);
 	outtextxy(70,430,ds_ch.ds[i].dapanC);
 	outtextxy(70,490,ds_ch.ds[i].dapanD);
-	outtextxy(70,550,ds_ch.ds[i].dapan);
-	
 	TaoHCN(385,700,635,730,MAU_XANH_LA,97,MAU_DEN); // SUA CH
 	GanID(385,700,635,730,97);
 	setbkcolor(MAU_XANH_LA);
@@ -2071,20 +2174,84 @@ void drawThi()
 	settextstyle(10,0,2);
 	outtextxy(27,15,"THOAT");	
 }
-void drawThi_1()
+void drawBai_Thi(DS_CAU_HOI ds_ch,int arr[],int trangThi)
 {
+	cout<<"toi trang: "<<trangThi<<endl;
+	char cau[10]="";
+	itoa(trangThi+1,cau,10);
+	setbkcolor(MAU_HONG);
+	TaoHCN(120,120,210,150,MAU_HONG,0,MAU_DEN);
+	outtextxy(125,125,"CAU:");
+	outtextxy(180,125,cau);
 	
+	setbkcolor(MAU_TRANG);
+	TaoHCN(250,165,1140,195,MAU_TRANG,0,MAU_DEN); // NOI DUNG CAU HOI
+	TaoHCN(250,305,1140,335,MAU_TRANG,0,MAU_DEN); 
+	TaoHCN(250,365,1140,395,MAU_TRANG,0,MAU_DEN); 
+	TaoHCN(250,425,1140,455,MAU_TRANG,0,MAU_DEN);
+	TaoHCN(250,485,1140,515,MAU_TRANG,0,MAU_DEN);
+	
+	create_circle(200,320,15,40);	
+	create_circle(200,380,15,41);
+	create_circle(200,440,15,42);
+	create_circle(200,500,15,43);
+	fillellipse(200,320,15,15);
+	fillellipse(200,380,15,15);
+	fillellipse(200,440,15,15);
+	fillellipse(200,500,15,15);
+	
+	outtextxy(255,170,ds_ch.ds[arr[trangThi]].noidung);
+	outtextxy(255,310,ds_ch.ds[arr[trangThi]].dapanA);
+	outtextxy(255,370,ds_ch.ds[arr[trangThi]].dapanB);
+	outtextxy(255,430,ds_ch.ds[arr[trangThi]].dapanC);
+	outtextxy(255,490,ds_ch.ds[arr[trangThi]].dapanD);
+	 
 }
-void Thi(PTR_MH &p,int &slmh)
+void drawThi_1(int trangThi)
+{
+	setbkcolor(MAU_XANH_DUONG_NHAT);
+    cleardevice(); 
+	ResetmapID();
+	rectangle(100,100,1280,750);
+	
+	setbkcolor(MAU_HONG);
+	TaoHCN(100,760,180,790,MAU_HONG,8,MAU_DEN); // TRUOC 8
+	outtextxy(105,765,"TRUOC");
+	GanID(100,760,765,790,8);
+	TaoHCN(1200,760,1280,790,MAU_HONG,9,MAU_DEN); // SAU 9
+	outtextxy(1205,765,"SAU");
+	GanID(1200,760,1280,790,9);
+	
+	TaoHCN(640,10,740,40,MAU_HONG,101,MAU_DEN); // NOP BAI 101
+	GanID(640,10,740,40,101);
+	setcolor(MAU_DEN);
+	setbkcolor(MAU_HONG);
+	settextstyle(10,0,2);
+	outtextxy(645,15,"NOP BAI");
+	
+	TaoHCN(20,10,100,40,MAU_HONG,99,MAU_DEN); // THOAT 99
+	GanID(20,10,100,40,99);
+	setcolor(MAU_DEN);
+	setbkcolor(MAU_HONG);
+	outtextxy(27,15,"THOAT");
+}
+void Thi(PTR_MH p,int &slmh,char m_sv[16])
 {
 	int x=-1;
 	int y=-1;
 	int trangMH=0;
+	int trangThi=0;
 	char m_mh[16]="";
 	char slc_char[10]="";
-	int slc=atoi(slc_char);
 	char time_char[10]="";
+	int slc=atoi(slc_char);
 	int time=atoi(time_char);
+	int arr[100]; // mang chua ID cua cac cau hoi thi [8,6,54,9,5,36];
+	char *ds_tl=new char[100]; // mang chua ds cac cau tra loi cua bai thi
+	DS_BAI_THI ds_bt;
+	
+	duyet_mh_doc_file_CH(p);
+	docfileBT(ds_bt);
 		
 	drawThi();
 	drawDS_MH(p,trangMH,slmh);
@@ -2136,16 +2303,65 @@ void Thi(PTR_MH &p,int &slmh)
 				case 5:
 					{
 						nhapText(165,170,390,195,slc_char,10,0);
+						slc=atoi(slc_char);
 						break;
 					}
 				case 6:
 					{
 						nhapText(165,230,390,255,time_char,10,0);
+						time=atoi(time_char);
 						break;
 					}
-				case 7:
+				case 7: // VAO THI
 					{
-						
+						BAI_THI bt;
+						if(strcmp(slc_char,"")==0 || strcmp(m_mh,"")==0)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"THONG TIN RONG !");
+							break;
+						}
+						MON_HOC *a=kttrungMH(p,m_mh);
+						if(a==NULL)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"MA KHONG TON TAI !");						
+						}
+						else
+						{		
+							random_CH(a->ds_ch,arr,slc);
+							drawThi_1(trangThi);
+							drawBai_Thi(a->ds_ch,arr,trangThi);							
+						}
+						break;
+					}
+				case 8:// TRANG TRUOC THI
+					{
+						if(trangThi==0)
+						{
+							break;
+						}
+						else
+						{
+							MON_HOC *a=kttrungMH(p,m_mh);
+							trangThi--;
+							drawBai_Thi(a->ds_ch,arr,trangThi);
+						}
+						break;
+					}
+				case 9: // TRANG SAU THI
+					{
+						if(trangThi==(slc-1))
+						{
+							break;
+						}
+						else
+						{
+							MON_HOC *a=kttrungMH(p,m_mh);
+							trangThi++;
+							drawBai_Thi(a->ds_ch,arr,trangThi);
+						}
+						break;
 					}
 				case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19:
 					{
@@ -2175,7 +2391,138 @@ void Thi(PTR_MH &p,int &slmh)
 							outtextxy(165,110,m_mh);
 						}
 						break;							
+					}
+				case 40: // CHON DAP AN
+					{
+						ds_tl[trangThi]='A';
+						setcolor(MAU_DEN);	
+						fillellipse(200,320,5,5);
+						reset_layout(190,370,210,390,MAU_TRANG);
+						reset_layout(190,430,210,450,MAU_TRANG);
+						reset_layout(190,490,210,510,MAU_TRANG);
+						break;
+					}
+				case 41:
+					{
+						ds_tl[trangThi]='B';
+						setcolor(MAU_DEN);
+						fillellipse(200,380,5,5);
+						reset_layout(190,310,210,330,MAU_TRANG);
+						reset_layout(190,430,210,450,MAU_TRANG);
+						reset_layout(190,490,210,510,MAU_TRANG);												
+						break;
+					}	
+				case 42:
+					{
+						ds_tl[trangThi]='C';
+						setcolor(MAU_DEN);
+						fillellipse(200,440,5,5);
+						reset_layout(190,310,210,330,MAU_TRANG);
+						reset_layout(190,370,210,390,MAU_TRANG);
+						reset_layout(190,490,210,510,MAU_TRANG);																		
+						break;
+					}
+				case 43:
+					{
+						ds_tl[trangThi]='D';
+						setcolor(MAU_DEN);
+						fillellipse(200,500,5,5);
+						reset_layout(190,310,210,330,MAU_TRANG);
+						reset_layout(190,370,210,390,MAU_TRANG);
+						reset_layout(190,430,210,450,MAU_TRANG);
+						MON_HOC *a=kttrungMH(p,m_mh);												
+						break;
+					}
+				case 99:
+					{
+						Thi(p,slmh,m_sv);
+						break;
+					}
+				case 101:
+					{
+						DS_CAU_HOI ds_ch_thi;
+						MON_HOC*a=kttrungMH(p,m_mh);
+						for(int i=0;i<slc;i++)
+						{
+							ds_ch_thi.ds[i].ID=a->ds_ch.ds[i].ID;
+							strcpy(ds_ch_thi.ds[i].noidung,a->ds_ch.ds[i].noidung);
+							strcpy(ds_ch_thi.ds[i].dapan,a->ds_ch.ds[i].dapan);
+							strcpy(ds_ch_thi.ds[i].dapanA,a->ds_ch.ds[i].dapanA);
+							strcpy(ds_ch_thi.ds[i].dapanB,a->ds_ch.ds[i].dapanB);
+							strcpy(ds_ch_thi.ds[i].dapanC,a->ds_ch.ds[i].dapanC);
+							strcpy(ds_ch_thi.ds[i].dapanD,a->ds_ch.ds[i].dapanD);
+						}
+						themBT(ds_bt,slc,m_sv,m_mh,ds_tl,arr,ds_ch_thi);
+						drawCauhoi_1(m_mh);
+						break;
 					}					
+			}
+		}
+		clearmouseclick(WM_LBUTTONDOWN);
+		delay(0.1);
+	}
+}
+void drawinputMSV(PTR_MH p,int slmh)
+{
+	setbkcolor(MAU_XANH_DUONG_NHAT);
+    cleardevice(); 
+	ResetmapID();
+	
+	setcolor(MAU_DEN);
+	setbkcolor(MAU_HONG);
+	settextstyle(10,0,2);
+	TaoHCN(65,145,155,175,MAU_HONG,0,MAU_DEN);
+	outtextxy(70,150,"MA SV");
+	TaoHCN(160,145,390,175,MAU_TRANG,1,MAU_DEN);
+	GanID(160,145,390,175,1);
+	TaoHCN(450,145,520,175,MAU_XANH_LA,2,MAU_DEN);
+	GanID(450,145,520,175,2);
+	setbkcolor(MAU_XANH_LA);
+	outtextxy(455,150,"GO");
+	
+	TaoHCN(20,10,100,40,MAU_HONG,99,MAU_DEN); // THOAT 99
+	GanID(20,10,100,40,99);
+	setcolor(MAU_DEN);
+	setbkcolor(MAU_HONG);
+	outtextxy(27,15,"THOAT");
+}
+void inputMSV(PTR_MH p,int slmh,DS_LOP ds_lop)
+{
+	int x=-1;
+	int y=-1;
+	char m_sv[16]="";
+	drawinputMSV(p,slmh);
+	while(true)
+	{
+		if(ismouseclick(WM_LBUTTONDOWN))
+		{
+			getmouseclick(WM_LBUTTONDOWN,x,y);
+			switch(mapID[x][y])
+			{
+				case 99:
+					{
+						menu();
+						break;
+					}
+				case 1:
+					{
+						nhapText(165,150,390,175,m_sv,16,0);
+						break;
+					}
+				case 2:
+					{
+						SINH_VIEN *x=kttrungSV(ds_lop,m_sv);
+						if(strcmp(m_sv,"")==0 || x==NULL)
+						{
+							resetThongBao();
+							outtextxy(1030,150,"MA SINH VIEN KHONG HOP LE !");						
+						}
+						else
+						{
+							Thi(p,slmh,m_sv);
+						}
+						break;
+					}
 			}
 		}
 		clearmouseclick(WM_LBUTTONDOWN);
