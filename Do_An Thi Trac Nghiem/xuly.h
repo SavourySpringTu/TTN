@@ -527,6 +527,7 @@ void docfileCH(DS_CAU_HOI &ds_ch,char m_mh[16])
 	fileIn.open(strcat(m_mh_temp,".txt"),ios_base :: in);
 	fileIn>>ds_ch.sl;
 	fileIn.ignore();
+	cout<<"Doc file CAU HOI xong!"<<endl;
 	for(int i=0;i<ds_ch.sl;i++)
 	{
 		fileIn>>ds_ch.ds[i].ID;
@@ -542,7 +543,6 @@ void docfileCH(DS_CAU_HOI &ds_ch,char m_mh[16])
 		fileIn.getline(ds_ch.ds[i].dapan,sizeof(ds_ch.ds[i].dapan),'\n');
 	}
 	fileIn.close();
-	cout<<"Doc file CAU HOI xong!"<<endl;
 }
 void ghifileCH(DS_CAU_HOI ds_ch,char m_mh[16])
 {
@@ -763,13 +763,6 @@ void themDiem(DS_DIEM_THI *&ds_dt,char m_sv[16],char m_mh[16],int diem)
 	}
 	ds_dt->sl++;	
 }
-//void giaiphongDS_DIEM_THI(DS_LOP &ds_lop)
-//{
-//	for(int i=0;i<ds_lop.sl;i++)
-//	{
-//		for(SINH_V)
-//	}
-//}
 // ================ DOC GHI FILE DIEM =============
 void docfileDiem(DS_DIEM_THI *&ds_dt,char m_sv[16])
 {
