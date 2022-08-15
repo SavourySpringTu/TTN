@@ -19,6 +19,7 @@ typedef struct diem_thi DIEM_THI;
 struct ds_diem_thi 
 {
 	diem_thi *phead=NULL;
+	diem_thi *ptail=NULL;
 	int sl=0;
 };
 typedef struct ds_diem_thi DS_DIEM_THI;
@@ -32,7 +33,7 @@ struct sinh_vien // ds lien ket don
 	char phai[5];
 	char password[17];
 	sinh_vien *pnext;
-	DIEM_THI *first_DIEM_THI;	
+	DS_DIEM_THI *first_DIEM_THI=new DS_DIEM_THI[100];	
 };
 typedef struct sinh_vien SINH_VIEN;
 struct ds_sinh_vien
@@ -93,10 +94,12 @@ typedef struct ds_lop DS_LOP;
 struct bai_thi
 {
 	int slc;
+	int time;
 	char masv[16];
 	char mamh[16];
 	char *ds_tl;
 	int *ds_ch_thi;
+	int diem;
 };
 typedef struct bai_thi BAI_THI;
 struct ds_bai_thi

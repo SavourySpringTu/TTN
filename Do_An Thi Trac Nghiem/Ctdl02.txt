@@ -28,7 +28,7 @@ Co mot truong hop dac biet truong hop suy bien Khi
 Trong thu tuc de quy co loi goi den chinh thu tuc do
 A
 750
-uu diem cua viec cai dat danh sach bang mang
+Uu Diem Cua Viec Cai Dat Danh Sach Bang Mang
 viec truy nhap vao phan tu cua mang duoc thuc hien truc tiep
 Co the thay doi so luong phan tu theo y muon cua nguoi dung
 Co the bo sung hoac xoa mot phan tu bat ky trong mang

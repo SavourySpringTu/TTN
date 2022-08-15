@@ -32,26 +32,34 @@ void themCH(DS_CAU_HOI &ds_ch,int id,char nd[72],char d_an_A[72],char d_an_B[72]
 void xoaCH(DS_CAU_HOI &ds_ch,int id);
 void suaCH(DS_CAU_HOI &ds_ch,int id,char nd[72],char d_an_A[72],char d_an_B[72],char d_an_C[72],char d_an_D[72],char d_an[2]);
 
-// ================= DOC GHI FILE LOP =============
+// ================ XU LY BAI THI ================
+void themBT(DS_BAI_THI &ds_bt,int slc,int diem,int time,char m_sv[16],char m_mh[16],char *ds_tl,int * ds_ch_thi);
+int kttrungCH_Thi(int arr[],int slch,int id);
+void random_CH(DS_CAU_HOI ds_ch,int arr[],int slch);
 
+// ================= DOC GHI FILE LOP =============
 void docfileLop(DS_LOP &ds_lop);
 void ghifileLop(DS_LOP ds_lop);
 
 // ============== DOC GHI SINH VIEN ===============
-
 void docfileSV(DS_SINH_VIEN *&ds_sv,char m_lop[16]);
 void ghifileSV(DS_SINH_VIEN *&ds_sv,char m_lop[16]);
 
 // ============== DOC GHI MON HOC ================
-
 void docfileMH(PTR_MH &p,int &slmh);
 void ghifileMH(PTR_MH &p);
 void dequyghifile(PTR_MH &p, ofstream& fileOut);
 
 // ============== DOC GHI CAU HOI ================
-
 void docfileCH(DS_CAU_HOI &ds_ch,char m_mh[16]);
 void ghifileCH(DS_CAU_HOI ds_ch,char m_mh[16]);
+
+// ============== DOC GHI BAI THI ================
+
+// ============== GIAI PHONG =====================
+void giaiphongMH(PTR_MH &p);
+void giaiphongLop(DS_LOP &ds_lop);
+void giaiphongBT (DS_BAI_THI &ds_bt);
 
 //================ XU LY LOP =====================
 
@@ -89,7 +97,14 @@ void suaLop(DS_LOP &ds_lop,char m_lop_edit[16],char t_lop_edit[51])
 	int temp=kttrungLop(ds_lop,m_lop_edit);
 	strcpy(ds_lop.ds[temp]->tenlop,t_lop_edit);
 }
-
+void giaiphongLop(DS_LOP &ds_lop)
+{
+	for (int i = 0; i < ds_lop.sl; i++)
+	{
+		delete[] ds_lop.ds[i]->first_SINH_VIEN;		
+		delete ds_lop.ds[i];
+	}
+}
 // ============= DOC GHI FILE LOP ===============
 void docfileLop(DS_LOP &ds_lop)
 {
@@ -149,7 +164,6 @@ SINH_VIEN *kttrungSV(DS_LOP ds_lop,char m_sv[16])
 }
 void themSV(DS_SINH_VIEN *&ds_sv,char m_sv[16],char h_sv[21],char t_sv[11],char p_sv[5],char ps[17])
 {
-	setbkcolor(MAU_XANH_DUONG_NHAT);
 	SINH_VIEN *p=khoitao(m_sv,h_sv,t_sv,p_sv,ps);
 	if(ds_sv->phead==NULL)
 	{
@@ -235,7 +249,7 @@ void ghifileSV(DS_SINH_VIEN *&ds_sv,char m_lop[16])
 		fileOut << p->password << endl;
 	}
 	fileOut.close();
-	cout<<"ghi file sv xong"<<endl;
+	cout<<"Ghi file SINH VIEN xong"<<endl;
 }
 void createFile(char ma[16]) // tao file
 {
@@ -295,7 +309,6 @@ void test(PTR_MH p)
 //=====================
 void themMH(PTR_MH &p,char m_mh[16],char t_mh[51])
 {
-	cout<<"mon them: "<<m_mh<<endl;
 	if(p==NULL)
 	{
 		PTR_MH a=new MON_HOC;
@@ -305,7 +318,6 @@ void themMH(PTR_MH &p,char m_mh[16],char t_mh[51])
 		a->right=NULL;
 		p=a;
 		cout<<p->mamh<<" "<<p->tenmh<<endl;
-		cout<<"them xong"<<endl;
 	}
 	else
 	{
@@ -317,20 +329,6 @@ void themMH(PTR_MH &p,char m_mh[16],char t_mh[51])
 		{
 			themMH(p->right,m_mh,t_mh);
 		}
-	}
-}
-void remove_case_3 ( PTR_MH &r , PTR_MH &rp )
-{
-	if (r->left != NULL) 
-	{
-		remove_case_3 (r->left,rp);	
-	}
-	else
-	{
-		strcpy(rp->mamh,r->mamh); 
-		strcpy(rp->tenmh,r->tenmh); 
-		rp = r;
-		r = rp->right;
 	}
 }
 void NodeTheMang(PTR_MH &X, PTR_MH &Y) 
@@ -380,7 +378,6 @@ void xoaMH(PTR_MH &p,char m_mh[16])
 			else
 			{
 				PTR_MH Y = p->right;
-				cout<<"vao node the mang"<<endl;
 				NodeTheMang(temp, Y);
 			}
 			delete temp;
@@ -392,7 +389,15 @@ void suaMH(PTR_MH &p,char m_mh[16],char t_mh_edit[51])
 	MON_HOC *x=kttrungMH(p,m_mh);
 	strcpy(x->tenmh,t_mh_edit);
 }
-
+void giaiphongMH(PTR_MH &p)
+{
+    if (p == NULL) return; 
+  
+    giaiphongMH(p->left); 
+    giaiphongMH(p->right); 
+   
+    delete p;
+}
 // =========== DOC GHI FILE MON HOC =============
 
 void docfileMH(PTR_MH &p,int &slmh)
@@ -436,7 +441,6 @@ void dequyghifile(PTR_MH &p, ofstream& fileOut)
 // ============= XU LY CAU HOI ==================
 int kttrungCH(DS_CAU_HOI ds_ch,int id) 
 {
-	cout<<"zo"<<endl;
 	for(int i=0;i<ds_ch.sl;i++)
 	{
 		if(ds_ch.ds[i].ID==id)
@@ -465,9 +469,7 @@ void themCH(DS_CAU_HOI &ds_ch,int id,char nd[72],char d_an_A[72],char d_an_B[72]
 	strcpy(p->dapanB,d_an_B);
 	strcpy(p->dapanC,d_an_C);
 	strcpy(p->dapanD,d_an_D);
-	cout<<"noi dung: "<<p->noidung<<endl;
 	ds_ch.ds[ds_ch.sl]=*p;
-	cout<<"noi dung: "<<ds_ch.ds[ds_ch.sl].noidung<<endl;
 	ds_ch.sl++;
 }
 void xoaCH(DS_CAU_HOI &ds_ch,int id)
@@ -476,7 +478,6 @@ void xoaCH(DS_CAU_HOI &ds_ch,int id)
 	{
 		if(ds_ch.ds[i].ID==id)
 		{
-			cout<<"xoa: "<<ds_ch.ds[i].ID<<endl;
 			for(int j=i;j<=ds_ch.sl-1;j++)
 			{
 				ds_ch.ds[j].ID=ds_ch.ds[j+1].ID;
@@ -592,11 +593,13 @@ void random_CH(DS_CAU_HOI ds_ch,int arr[],int slch)
 		arr[i]=ds_ch.ds[vt].ID;	
 	}
 }
-void themBT(DS_BAI_THI &ds_bt,int slc,char m_sv[16],char m_mh[16],char *ds_tl,int * ds_ch_thi)
+void themBT(DS_BAI_THI &ds_bt,int slc,int diem,int time,char m_sv[16],char m_mh[16],char *ds_tl,int * ds_ch_thi)
 {
 	BAI_THI *p=new BAI_THI;
 	
 	p->slc=slc;
+	p->time=time;
+	p->diem=diem;
 	strcpy(p->mamh,m_mh);
 	strcpy(p->masv,m_sv);
 	p->ds_tl=new char[p->slc];
@@ -607,61 +610,202 @@ void themBT(DS_BAI_THI &ds_bt,int slc,char m_sv[16],char m_mh[16],char *ds_tl,in
 	ds_bt.ds[ds_bt.sl]=p;
 	ds_bt.sl++;
 }
+bool ktmonhocdathi(DS_BAI_THI ds_bt,char m_mh[16],char m_sv[16])
+{
+	for(int i=0;i<ds_bt.sl;i++)
+	{
+		cout<<ds_bt.ds[i]->mamh<<endl;
+		cout<<ds_bt.ds[i]->masv<<endl;
+		if(strcmp(ds_bt.ds[i]->mamh,m_mh)==0 && strcmp(ds_bt.ds[i]->masv,m_sv)==0)
+		{
+			cout<<"trung"<<endl;
+			return false;
+		}
+	}
+	return true;
+}
+int tinhdiem(PTR_MH p,char m_mh[16],char *ds_tl,int *b,int slc)
+{
+	int diem=0;
+	MON_HOC *a=kttrungMH(p,m_mh);
+	for(int i=0;i<slc;i++)
+	{
+		int x=kttrungCH(a->ds_ch,b[i]);
+		if(a->ds_ch.ds[x].dapan[0]==ds_tl[i])
+		{
+			diem++;
+		} 
+	}
+	diem=(float(diem)/float(slc))*10;
+	return diem;
+}
+void giaiphongBT (DS_BAI_THI &ds_bt)
+{
+	for(int i=0;i<ds_bt.sl;i++)
+	{
+		delete ds_bt.ds[i];
+	}
+}
 //================== DOC GHI FILE BAI THI =====================
 void docfileBT(DS_BAI_THI &ds_bt)
 {
-
-
 	ifstream fileIn;
+	fileIn.open("ds_bt.txt",ios_base :: in);
 	fileIn>>ds_bt.sl;
 	fileIn.ignore();
 	for(int i=0;i<ds_bt.sl;i++)
 	{
-		BAI_THI bt;
-		fileIn>>ds_bt.sl;
+		ds_bt.ds[i]=new BAI_THI;
+		fileIn>>ds_bt.ds[i]->slc;
 		fileIn.ignore();
-		fileIn>>bt.slc;
+		fileIn>>ds_bt.ds[i]->time;
 		fileIn.ignore();
-		fileIn.getline(bt.mamh,sizeof(bt.mamh),'\n');
-		if(strlen(bt.mamh) == 0) 
+		fileIn.getline(ds_bt.ds[i]->mamh,sizeof(ds_bt.ds[i]->mamh),'\n');
+		if(strlen(ds_bt.ds[i]->mamh) == 0) 
 		{  
 			break;
 		}
-		fileIn.getline(bt.masv,sizeof(bt.masv),'\n');
-		bt.ds_tl=new char[bt.slc];
-		for(int j=0;j<bt.slc;j++)
+		fileIn.getline(ds_bt.ds[i]->masv,sizeof(ds_bt.ds[i]->masv),'\n');
+		ds_bt.ds[i]->ds_tl=new char[ds_bt.ds[i]->slc];
+		ds_bt.ds[i]->ds_ch_thi=new int[ds_bt.ds[i]->slc];
+		for(int j=0;j<ds_bt.ds[i]->slc;j++)
 		{
-			if(j==bt.slc-1)
+			if(j==ds_bt.ds[i]->slc-1)
 			{
 				char *a=new char;
 				fileIn.getline(a,sizeof(a),'\n');	
-				bt.ds_tl[j]=*a;
+				ds_bt.ds[i]->ds_tl[j]=*a;
 			}
 			else
 			{
 				char *a=new char;
-				fileIn.getline(a,sizeof(a),',');	
-				bt.ds_tl[j]=*a;
+				fileIn.getline(a,sizeof(a),',');
+				ds_bt.ds[i]->ds_tl[j]=*a;
 			}
 		}	
-		for(int j=0;j<bt.slc;j++)
+		for(int j=0;j<ds_bt.ds[i]->slc;j++)
 		{
-			if(j==bt.slc-1)
+			if(j==ds_bt.ds[i]->slc-1)
 			{
-				char *a=new char;
-				fileIn.getline(a,sizeof(a),'\n');	
-				bt.ds_ch_thi[j]=*a;	
+				fileIn>>ds_bt.ds[i]->ds_ch_thi[j];
+				fileIn.ignore();
 			}
 			else
 			{
-				char *a=new char;
-				fileIn.getline(a,sizeof(a),',');	
-				bt.ds_ch_thi[j]=*a;	
+				fileIn>>ds_bt.ds[i]->ds_ch_thi[j];
+				fileIn.ignore();
 			}
 		}
-		*ds_bt.ds[ds_bt.sl]=bt;
-		ds_bt.sl++;
+		fileIn>>ds_bt.ds[i]->diem;
+		fileIn.ignore();
 	}
 	fileIn.close();
 	cout<<"Doc file BAI THI xong!"<<endl;
+}
+void ghifileBT(DS_BAI_THI ds_bt)
+{
+	ofstream fileOut;
+	fileOut.open("ds_bt.txt", ios_base::out);
+	fileOut << ds_bt.sl<< endl;
+	for (int i = 0; i < ds_bt.sl; i++) 
+	{
+		fileOut <<ds_bt.ds[i]->slc<< endl;
+		fileOut <<ds_bt.ds[i]->time<< endl;
+		fileOut <<ds_bt.ds[i]->mamh<< endl;		
+		fileOut <<ds_bt.ds[i]->masv<< endl;
+		for(int j=0;j<ds_bt.ds[i]->slc;j++)
+		{
+			if(j==ds_bt.ds[i]->slc-1)
+			{
+				fileOut <<ds_bt.ds[i]->ds_tl[j]<<endl;
+			}
+			else
+			{
+				fileOut <<ds_bt.ds[i]->ds_tl[j]<<',';
+			}
+		}
+		for(int j=0;j<ds_bt.ds[i]->slc;j++)
+		{
+			if(j==ds_bt.ds[i]->slc-1)
+			{
+				fileOut <<ds_bt.ds[i]->ds_ch_thi[j]<<'\n';
+			}
+			else
+			{
+				fileOut <<ds_bt.ds[i]->ds_ch_thi[j]<<',';
+			}
+		}
+		fileOut <<ds_bt.ds[i]->diem<< endl;	
+	}
+	fileOut.close();
+}
+// ===================== DIEM =====================
+DIEM_THI *khoitaoDiem(char m_sv[16],int diem)
+{
+	DIEM_THI *p=new DIEM_THI;
+	strcpy(p->mamh,m_sv);
+	p->diem=diem;
+	p->pnext=NULL;
+	return p;
+}
+void themDiem(DS_DIEM_THI *&ds_dt,char m_sv[16],char m_mh[16],int diem)
+{
+	DIEM_THI *p=khoitaoDiem(m_mh,diem);
+	if(ds_dt->phead==NULL)
+	{
+		ds_dt->phead=ds_dt->ptail=p;
+	}
+	else
+	{
+		ds_dt->ptail->pnext=p;
+		p->pnext=NULL;
+		ds_dt->ptail=p;
+	}
+	ds_dt->sl++;	
+}
+//void giaiphongDS_DIEM_THI(DS_LOP &ds_lop)
+//{
+//	for(int i=0;i<ds_lop.sl;i++)
+//	{
+//		for(SINH_V)
+//	}
+//}
+// ================ DOC GHI FILE DIEM =============
+void docfileDiem(DS_DIEM_THI *&ds_dt,char m_sv[16])
+{
+	char m_sv_temp[16]="";
+	strcpy(m_sv_temp,m_sv);
+	
+	ifstream fileIn;
+	fileIn.open(strcat(m_sv_temp,".txt"),ios_base :: in);
+	fileIn>>ds_dt->sl;
+	fileIn.ignore();
+	while(!fileIn.eof())
+	{
+		DIEM_THI *dt=new DIEM_THI;
+		fileIn>>dt->diem;
+		fileIn.ignore();
+		fileIn.getline(dt->mamh, sizeof(dt->mamh),'\n');		
+		if(strlen(dt->mamh) == 0) {
+			break;
+		}
+		themDiem(ds_dt,m_sv,dt->mamh,dt->diem)	;		
+	} 
+	fileIn.close();
+	cout<<"Doc file DIEM xong!"<<endl;	
+}
+void ghifileDiem(DS_DIEM_THI *ds_dt,char m_sv[16])
+{
+	char m_sv_temp[16]="";
+	strcpy(m_sv_temp,m_sv);
+	ofstream fileOut;
+	fileOut.open(strcat(m_sv_temp,".txt"), ios_base::out);
+	fileOut << ds_dt->sl<< endl;
+	for (DIEM_THI *p=ds_dt->phead;p!=NULL;p=p->pnext) 
+	{
+		cout<<"zo for"<<endl;
+		fileOut <<p->diem<< endl;
+		fileOut <<p->mamh << endl;
+	}
+	fileOut.close();	
 }
