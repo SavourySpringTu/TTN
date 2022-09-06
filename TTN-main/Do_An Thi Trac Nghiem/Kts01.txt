@@ -1,0 +1,92 @@
+12
+198
+Doi 1024 Thanh So Nhi Phan
+10 0000 0000
+100 0000 0000
+100 0000 0001
+100 000 1000
+B
+913
+Doi So Nhi Phan Sang Dang Thap Luc Phan 1010 1111 0100 1110
+Bf4e
+Af4e
+Be4f
+Ae4f
+B
+123
+Khi Khong Duoc Chon Bus Du Lieu Cua Bo Nho O Trang Thai
+0
+1
+High Z
+Ngau Nhien
+D
+129
+Khi Khong Duoc Chon Ngo Ra Cua Cong Dem 3 Trang Thai Se
+Giong Trang Thai Vao Truoc Do
+Luon Bang 0
+Luon Bang 1
+High Z
+B
+500
+Can 8 bo nho bao nhieu Kb de co dung luong 1MB
+256
+64
+128
+32
+C
+191
+Trong he thong 80286 BUS dia chi duoc noi toi khoi
+Tao AU
+Khoi giao dien Bus
+Ca AU va BU
+Khoi lenh IU
+A
+606
+Can bao nhieu bo nho 8KB de co dung luong nho 1MB
+100
+128
+112
+256
+B
+607
+Neu dia chi cua mot vung nho 642KB la 0 thi dia chi cuoi
+64200H
+00642H
+A07FFH
+A700FH
+B
+229
+Bo nho co the truy cap ngau nhien la
+ROM va RAM
+RAM
+ROM
+Bo nho bang tu
+B
+235
+He thong vi xu ly bao gom bao nhieu khoi chuc nang chinh
+1
+2
+3
+4
+D
+833
+Bus dia chi la
+Cac ngo vao cua vi xu ly
+Cac duong hai chieu cua bo vi xu ly
+Cac ngo ra cua vi xu ly
+La cac duong tro khang cao cua bo nho
+C
+491
+Bus dia chi la
+Cac ngo vao cua vi xu ly
+Cac duong hai chieu cua bo vi xu ly
+Cac ngo ra cua vi xu ly
+La cac duong tro khang cao cua bo nho
+B
+596
+CPU la gi
+Central Processing Unit
+Graphics Processing Unit
+Random Access Memory
+Read Only Memory
+A
